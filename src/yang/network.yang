@@ -1,0 +1,60 @@
+module network {
+  namespace "http://com/example/network";
+  prefix network;
+
+  import tailf-ncs { prefix ncs; }
+  import tailf-common { prefix tailf; }
+  import ietf-inet-types { prefix inet; }
+  
+  grouping network {
+    leaf name {
+      type string;
+    }
+    leaf network {
+      tailf:info "Subnet (x.x.x.x), ex. 192.168.1.0";
+      type inet:ipv4-address;
+      mandatory "true";
+    }
+    leaf netmask {
+      tailf:info "Subnet Mask (x.x.x.x), ex. 255.255.255.0";
+      type inet:ipv4-address;
+      mandatory "true";
+    }
+    leaf gateway-ip-address {
+      tailf:info "Gateway IP address";
+      type inet:ipv4-address;
+    }
+    container resource-pool {
+      tailf:info "Resource Pool for IP addresses";
+      leaf name {
+        type string;
+      }
+      list range {
+        key "from to";
+        leaf from {
+          type inet:ip-address-no-zone;
+        }
+
+        leaf to {
+          type inet:ip-address-no-zone;
+        }
+      }
+      list subnet {
+        key "address cidrmask";
+        leaf address {
+          type inet:ip-address;
+        }
+
+        leaf cidrmask {
+          type uint8 {
+            range "1..128";
+          }
+        }
+      }
+    }
+    leaf-list dns-ip-address {
+      tailf:info "DNS server IP address";
+      type inet:ipv4-address;
+    }
+  }
+}

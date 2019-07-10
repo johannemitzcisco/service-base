@@ -1,0 +1,64 @@
+module site {
+  namespace "http://com/example/site";
+  prefix site;
+
+  import tailf-ncs { prefix ncs; }
+  import tailf-common { prefix tailf; }
+//  import ietf-inet-types { prefix inet; }
+  import tenant { prefix tenant; }
+  import network { prefix network; }
+  
+  description
+    "Site definition containing tenant, topology, and networks";
+
+  revision 2019-06-07 {
+    description
+      "Initial revision.";
+  }
+
+  grouping site {
+    leaf name {
+      type string;
+    }
+    list tenant {
+      key name;
+      uses tenant:tenant-grouping;
+    }
+    container management-network {
+      uses network:network;
+    }
+  }
+
+  grouping esc-vmware-vim {
+    container elastic-services-controller {
+      tailf:info "ESC device that manages this site";
+      leaf name {
+        tailf:info "Name of the ESC device";
+        type string;
+        tailf:non-strict-leafref {
+          path "/ncs:devices/ncs:device/ncs:name";
+        }
+      }
+      leaf username {
+        tailf:info "Name of the ESC user to subscribe to ESC changes";
+        type string;
+        mandatory "true";
+      }
+    }
+    leaf datacenter-name {
+      tailf:info "VMWare datacenter name";
+      type string;
+      mandatory "true";
+    }
+    leaf cluster-name {
+      tailf:info "VMWare compute cluster name";
+      type string;
+      mandatory "true";
+    }
+    leaf datastore-name {
+      tailf:info "VMWare datastore name";
+      type string;
+      mandatory "true";
+    }
+  }
+}

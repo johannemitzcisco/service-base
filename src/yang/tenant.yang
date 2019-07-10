@@ -1,0 +1,10 @@
+module tenant {
+  namespace "http://com/example/tenant";
+  prefix tenant;
+
+  grouping tenant-grouping {
+    leaf name {
+      type string;
+    }
+  }
+}

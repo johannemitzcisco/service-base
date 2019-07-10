@@ -1,0 +1,7 @@
+<ncs-package xmlns="http://tail-f.com/ns/ncs-packages">
+  <name>service-base</name>
+  <package-version>1.0</package-version>
+  <description>Service Base Models</description>
+  <ncs-min-version>4.7</ncs-min-version>
+
+</ncs-package>

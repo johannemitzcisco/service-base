@@ -1,0 +1,15 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0">
+  <resource-pools xmlns="http://tail-f.com/pkg/resource-allocator">
+  <ip-address-pool xmlns="http://tail-f.com/pkg/ipaddress-allocator">
+    <name>{$ADDRESS-POOL}</name>
+      <allocation>
+        <id>{$ALLOCATION-NAME}</id>
+        <username>{$ALLOCATING-USERNAME}</username>
+        <allocating-service xmlns:vnf-manager="http://example.com/vnf-manager">{$ALLOCATING-SERVICE}</allocating-service>
+        <request>
+          <subnet-size>{$SUBNET-SIZE}</subnet-size>
+        </request>
+      </allocation>
+  </ip-address-pool>
+  </resource-pools>
+</config-template>
