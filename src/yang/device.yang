@@ -1,0 +1,29 @@
+module device {
+  namespace "http://com/example/device";
+  prefix device;
+
+  import tailf-ncs { prefix ncs; }
+  import node { prefix node; }
+
+  grouping device-grouping {
+    uses node:node-grouping;
+
+    leaf-list role {
+      type leafref {
+        path "/device:device-role/device:name";
+      }
+    }
+  }
+
+  list device-role {
+    key name;
+    leaf name {
+      type string;
+    }
+    leaf-list template {
+      type leafref {
+        path "/ncs:devices/ncs:template/ncs:name";
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+module node {
+  namespace "http://com/example/node";
+  prefix node;
+
+  grouping node-grouping {
+    leaf name {
+      description "Device identifier";
+      type string;
+    }
+    leaf nso-name {
+      description "Device's NSO identifier";
+      type string;
+    }
+    leaf hostname {
+      description "Device's hostname";
+      type string;
+    }
+  }
+
+}
