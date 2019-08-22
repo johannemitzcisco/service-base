@@ -8,9 +8,31 @@ module device {
   grouping device-grouping {
     uses node:node-grouping;
 
-    leaf-list role {
-      type leafref {
-        path "/device:device-role/device:name";
+    list role {
+      key name;
+      leaf name {
+        type leafref {
+          path "/device:device-role/device:name";
+        }
+      }
+      list template-variables {
+        key template-name;
+        leaf template-name {
+          type leafref {
+            path "deref(../../name)/../device:device-template/device:name";
+          }
+        }
+        list variable {
+          key name;
+          leaf name {
+            type leafref {
+              path "deref(../../template-name)/../device:variable-name";
+            }
+          }
+          leaf value {
+            type string;
+          }
+        }
       }
     }
   }
@@ -20,9 +42,15 @@ module device {
     leaf name {
       type string;
     }
-    leaf-list template {
-      type leafref {
-        path "/ncs:devices/ncs:template/ncs:name";
+    list device-template {
+      key name;
+      leaf name {
+        type leafref {
+          path "/ncs:devices/ncs:template/ncs:name";
+        }
+      }
+      leaf-list variable-name {
+        type string;
       }
     }
   }
