@@ -1,11 +1,18 @@
 <ncs-package xmlns="http://tail-f.com/ns/ncs-packages">
   <name>service-base</name>
-  <package-version>0.1.0</package-version>
-  <description>Service Base Models</description>
+  <package-version>2.0.0</package-version>
+  <description>Service Base Models and Actions</description>
   <ncs-min-version>4.7</ncs-min-version>
 
   <required-package>
     <name>resource-manager</name>
   </required-package>
+
+  <component>
+    <name>main</name>
+    <application>
+      <python-class-name>ip-addressing.main.Main</python-class-name>
+    </application>
+  </component>
 
 </ncs-package>

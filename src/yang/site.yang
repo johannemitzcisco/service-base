@@ -25,7 +25,7 @@ module site {
       uses tenant:tenant-grouping;
     }
     container management-network {
-      uses network:network;
+      uses network:network-grouping;
     }
   }
 

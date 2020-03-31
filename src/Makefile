@@ -15,16 +15,30 @@ YANGPATH += yang \
 
 NCSCPATH   = $(YANGPATH:%=--yangpath %)
 YANGERPATH = $(YANGPATH:%=--path %)
+NSRC = $(wildcard ../python/ftdv_ngfw/*.py)
+PYTHONSRC = $(wildcard ../python/ip-addressing/*.py)
+PYTHONBUILD = $(wildcard ../python/ip-addressing/*.pyc)
+TEMPLATESRC = $(wildcard loaddata/*.xml)
 
-fxs: $(DIRS) $(FXS)
-.PHONY: fxs
+fxs: $(PYTHONSRC) $(PYTHONBUILD) $(DIRS) $(FXS) $(TEMPLATESRC)
+
+$(PYTHONSRC): .FORCE
+	python -m py_compile $@
+.PHONY: .FORCE
+$(PYTHONBUILD): .FORCE2
+	rm -f $@
+.PHONY: .FORCE2
 
 $(DIRS):
 	mkdir -p $@
 
 ../load-dir/%.fxs: yang/%.yang
 	$(NCSC)  `ls $*-ann.yang  > /dev/null 2>&1 && echo "-a $*-ann.yang"` \
-             $(NCSCPATH) -c -o $@ $<
+           $(NCSCPATH) -c -o $@ $<
+
+$(TEMPLATESRC): .FORCE
+	cp $@ ../load-dir
+
 clean:
 	rm -rf $(DIRS)
 .PHONY: clean

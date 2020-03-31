@@ -6,7 +6,63 @@ module network {
   import tailf-common { prefix tailf; }
   import ietf-inet-types { prefix inet; }
   
-  grouping network {
+  grouping network-allocation-grouping {
+    leaf name {
+      type string;
+    }
+    leaf first-address {
+      config "false";
+      type string;
+    }
+    leaf last-address {
+      config "false";
+      type string;
+    }
+    tailf:action allocate-ip-addresses {
+      tailf:actionpoint service-base-allocateIPAddresses-action;
+      input {
+        leaf network-keypath {
+          type string;
+        }
+        leaf allocating-service {
+          type string;
+        }
+        leaf address-count {
+          type uint8;
+        }
+      }
+      output {
+        leaf result {
+          type string;
+        }
+      }
+    }
+    tailf:action check-ready {
+      tailf:actionpoint service-base-checkReady-action;
+      input {
+        leaf network-keypath {
+          type string;
+        }
+      }
+      output {
+        leaf result {
+          type string;
+        }
+      }
+    }
+  }
+
+  grouping network-grouping {
+    tailf:action initialize-ip-address-pool {
+      tailf:actionpoint service-base-initializeIPAddressPool-action;
+      input {
+      }
+      output {
+        leaf result {
+          type string;
+        }
+      }
+    }
     leaf name {
       type string;
     }
