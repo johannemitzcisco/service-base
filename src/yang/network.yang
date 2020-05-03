@@ -76,9 +76,19 @@ module network {
       type inet:ipv4-address;
       mandatory "true";
     }
+    leaf prefix {
+      type uint8 {
+        range "1..32";
+      }
+    }
     leaf gateway-ip-address {
       tailf:info "Gateway IP address";
       type inet:ipv4-address;
+    }
+    leaf vlan-id {
+      type uint16 {
+        range "1..4096";
+      }
     }
     container resource-pool {
       tailf:info "Resource Pool for IP addresses";

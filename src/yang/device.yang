@@ -49,6 +49,11 @@ module device {
           path "/ncs:devices/ncs:template/ncs:name";
         }
       }
+      leaf ned-id {
+        type leafref {
+          path "deref(../name)/../ncs:ned-id/ncs:id";
+        }
+      }
       leaf-list variable-name {
         type string;
       }
