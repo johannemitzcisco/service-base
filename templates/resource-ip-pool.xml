@@ -3,18 +3,18 @@
   <ip-address-pool xmlns="http://tail-f.com/pkg/ipaddress-allocator">
     <name>{resource-pool/name}</name>
     <auto-redeploy>true</auto-redeploy>
-    <?foreach {subnet}?>
+<?foreach {subnet}?>
     <subnet>
       <address>{address}</address>
       <cidrmask>{cidrmask}</cidrmask>
     </subnet>
-    <?end?>
-    <?foreach {range}?>
+<?end?>
+<?foreach {range}?>
     <range>
       <from>{from}</from>
       <to>{to}</to>
     </range>
-    <?end?>
+<?end?>
   </ip-address-pool>
   </resource-pools>
 </config-template>

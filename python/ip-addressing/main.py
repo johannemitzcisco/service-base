@@ -27,10 +27,10 @@ class InitializeIPAddressPool(Action):
             vars = ncs.template.Variables()
             template = ncs.template.Template(network)
             template.apply('resource-ip-pool', vars)
-            result = "IP Allocation Successful"
+            result = "Resource Pool Creation Successful"
         except Exception as error:
             self.log.info(traceback.format_exc())
-            result = 'Error Allocation IP Resouces pool: ' + str(error)
+            result = 'Error Creating IP Resouces pool: ' + str(error)
         finally:
             output.result = result
 
@@ -42,19 +42,18 @@ class AllocateIPAddresses(Action):
             maapi = ncs.maapi.Maapi()
             maapi.attach2(0, 0, uinfo.actx_thandle)
             trans = ncs.maapi.Transaction(maapi, uinfo.actx_thandle)
-            network_allocation = ncs.maagic.get_node(trans, kp)
-            service_network = network_allocation._parent
-            network = ncs.maagic.get_node(trans, input.network_keypath)
+            allocation = ncs.maagic.get_node(trans, kp)
+            resource_pool = allocation._parent._parent
             ip_list = list(netaddr.iter_iprange('1.1.1.0', '1.1.1.{}'.format(int(input.address_count)-1)))
             prefixlen = netaddr.cidr_merge(ip_list)[0].prefixlen
-            self.log.info('Allocating IP Addresses: '+network_allocation.name)
+            self.log.info('Allocating IP Addresses: '+allocation.name)
             vars = ncs.template.Variables()
-            vars.add('ADDRESS-POOL', network.resource_pool.name);
-            vars.add('ALLOCATION-NAME', network_allocation.name);
+            vars.add('ADDRESS-POOL', resource_pool.name);
+            vars.add('ALLOCATION-NAME', allocation.name);
             vars.add('ALLOCATING-USERNAME', uinfo.username);
             vars.add('ALLOCATING-SERVICE', input.allocating_service)
             vars.add('SUBNET-SIZE', prefixlen);
-            template = ncs.template.Template(network_allocation)
+            template = ncs.template.Template(resource_pool)
             template.apply('ip-address-allocation', vars)
             result = "Network Allocation Successful"
         except Exception as error:
@@ -72,18 +71,15 @@ class CheckReady(Action):
             maapi = ncs.maapi.Maapi()
             maapi.attach2(0, 0, uinfo.actx_thandle)
             trans = ncs.maapi.Transaction(maapi, uinfo.actx_thandle)
-            root = ncs.maagic.get_root(trans)
             allocation = ncs.maagic.get_node(trans, kp)
-            self.log.info('Getting Keypath: ', input.network_keypath)
-            site_network = ncs.maagic.get_node(trans, input.network_keypath)
-            network = allocation._parent
+            network = allocation._parent._parent._parent
             self.log.info('Checking IP allocation on Pool {}, Allocation {}, Network {}' \
-                          .format(site_network.resource_pool.name, 
+                          .format(network.resource_pool.name, 
                           allocation.name, network.name))
             with ncs.maapi.single_read_trans(uinfo.username, uinfo.context,
                                               db=ncs.OPERATIONAL) as op_trans:
                 op_root = ncs.maagic.get_root(op_trans)
-                ip_allocation_subnet = op_root.resource_pools.ip_address_pool[site_network.resource_pool.name] \
+                ip_allocation_subnet = op_root.resource_pools.ip_address_pool[network.resource_pool.name] \
                                 .allocation[allocation.name].response.subnet
             self.log.info('Subnet: ', ip_allocation_subnet)
             if ip_allocation_subnet is not None:

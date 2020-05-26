@@ -21,9 +21,6 @@ module network {
     tailf:action allocate-ip-addresses {
       tailf:actionpoint service-base-allocateIPAddresses-action;
       input {
-        leaf network-keypath {
-          type string;
-        }
         leaf allocating-service {
           type string;
         }
@@ -39,11 +36,6 @@ module network {
     }
     tailf:action check-ready {
       tailf:actionpoint service-base-checkReady-action;
-      input {
-        leaf network-keypath {
-          type string;
-        }
-      }
       output {
         leaf result {
           type string;
@@ -116,6 +108,11 @@ module network {
             range "1..128";
           }
         }
+      }
+      list allocation {
+        config "false";
+        key name;
+        uses network-allocation-grouping;
       }
     }
     leaf-list dns-ip-address {
